@@ -1,7 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { SayHelloRequest } from './WebRequestBank/AxiosRequest';
+import { apiGet } from './WebRequestBank/FetchWrapper';
+import { Endpoints } from './WebRequestBank/Constants';
+
+interface StandardMessage {
+  message: string
+}
 
 function App() {
   return (
@@ -19,12 +24,17 @@ function App() {
         >
           Learn React
         </a>
-        <button onClick={SayHelloRequest}>
+        <button onClick={SayHelloInAnAlert}>
           Test Hello World Endpoint
         </button>
       </header>
     </div>
   );
+}
+
+const SayHelloInAnAlert = async () => {
+  const response: StandardMessage = await apiGet<StandardMessage>(Endpoints.HelloWorld)
+  alert(response.message)
 }
 
 export default App;

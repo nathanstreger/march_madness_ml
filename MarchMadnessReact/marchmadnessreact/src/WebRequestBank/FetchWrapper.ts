@@ -4,26 +4,23 @@ const apiMethods = {
     Delete: 'DELETE'
 }
 
-export function apiGet<T>(url: string) {
-    return apiFetch<T>(url, apiMethods.Get)
+export async function apiGet<T>(url: string) {
+    return await apiFetch<T>(url, apiMethods.Get)
 }
 
-export const apiPost = (url: string, body?: object | string) => {
-
+export async function apiPost<T>(url: string, body?: object | string) {
+    return await apiFetch<T>(url, apiMethods.Post, body)
 }
 
-export const apiDelete = (url: string) => {
-
+export async function apiDelete<T>(url: string) {
+    return await apiFetch<T>(url, apiMethods.Delete)
 }
 
-const HTTP_NO_RESPONSE = new Error("No response")
-const HTTP_FORBIDDEN = new Error("403 - Forbidden")
-
-async function apiFetch<T>(url: string, apiMethod: string, body?: object | string) {
+async function apiFetch<T>(url: string, apiMethod: string, body?: object | string): Promise<T> {
     const requestInit: RequestInit = buildRequest(apiMethod, body)
 
     const response = await fetch(url, requestInit)
-    const data = await (response.json() as Promise<ResponseWithErrorInfo<T>>)
+    const data = response.json()
     return data!
 }
 
@@ -47,20 +44,4 @@ const buildRequest = (apiMethod: string, body?: object | string): RequestInit =>
     }
 
     return initOptions
-}
-
-function handlePotentialResponseErrors(resp: Response) {
-    if (!resp)
-        throw HTTP_NO_RESPONSE
-    if (resp.ok)
-        return resp
-    if (resp.status === 403)
-        throw HTTP_FORBIDDEN
-    throw new Error(`${resp.status} - ${resp.statusText}`)
-}
-
-interface ResponseWithErrorInfo<T> {
-    Data?: T,
-    ErrorCode: number,
-    Message: string
 }
