@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { SayHelloRequest } from './WebRequestBank/AxiosRequest';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
         >
           Learn React
         </a>
+        <button onClick={SayHelloRequest}>
+          Test Hello World Endpoint
+        </button>
       </header>
     </div>
   );
